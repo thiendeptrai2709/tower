@@ -1,22 +1,17 @@
 ﻿using UnityEngine;
-using TMPro; // Quan trọng: dùng TextMeshPro
+using TMPro;
 
 public class GoldManager : MonoBehaviour
 {
     public static GoldManager Instance;
 
-    public int gold = 0;                 // Số vàng hiện tại
-    public TextMeshProUGUI goldText;     // UI TMP hiển thị vàng
+    public int gold = 0;
+    public TextMeshProUGUI goldText;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-    }
-
-    void Start()
-    {
-        UpdateUI();
     }
 
     public void AddGold(int amount)
@@ -33,10 +28,10 @@ public class GoldManager : MonoBehaviour
             UpdateUI();
             return true;
         }
-        return false; // Không đủ vàng
+        return false;
     }
 
-    void UpdateUI()
+    public void UpdateUI()
     {
         if (goldText != null)
             goldText.text = "Gold: " + gold;

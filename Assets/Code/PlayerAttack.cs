@@ -2,77 +2,88 @@
 
 public class PlayerAttack : MonoBehaviour
 {
-    public float attackRange = 5f;          // Tầm đánh
-    public GameObject bulletPrefab;         // Prefab bullet
-    public Transform firePoint;              // Vị trí bắn đạn
-    public float bulletSpeed = 10f;          // Tốc độ đạn
-    public float fireCooldown = 1f;          // Thời gian giữa các lần bắn
+    public float attackRange = 5f;
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+    public float bulletSpeed = 10f;
+    public float fireCooldown = 1f; // sẽ được override bởi PlayerUpgrade
 
-    private Transform targetEnemy;           // Enemy gần nhất trong tầm
     private float fireTimer = 0f;
+    private Transform targetEnemy;
+    private PlayerUpgrade tower;
+
+    void Start()
+    {
+        // Lấy PlayerUpgrade trên instance
+        tower = GetComponent<PlayerUpgrade>();
+
+        // đảm bảo tower đã Awake xong, giá trị fireCooldown instance đã có
+        if (tower != null)
+            fireCooldown = tower.FireCooldown;
+        else
+            fireCooldown = Mathf.Max(0.1f, fireCooldown); // fallback
+
+        fireTimer = fireCooldown; // delay lần bắn đầu
+    }
 
     void Update()
     {
         fireTimer -= Time.deltaTime;
+        FindNearestEnemy();
 
-        FindNearestEnemyInRange();
-
-        if (targetEnemy != null)
+        if (targetEnemy != null && fireTimer <= 0f)
         {
-            FlipTowards(targetEnemy.position);  // <-- dùng lật trái/phải thay vì xoay
-
-            if (fireTimer <= 0f)
-            {
-                ShootAt(targetEnemy.position);
-                fireTimer = fireCooldown;
-            }
+            ShootAt(targetEnemy.position);
+            fireTimer = fireCooldown; // dùng fireCooldown hiện tại
         }
     }
 
-    void FindNearestEnemyInRange()
+    void FindNearestEnemy()
     {
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, attackRange, LayerMask.GetMask("Enemy"));
-
         float minDist = Mathf.Infinity;
-        Transform nearestEnemy = null;
+        Transform nearest = null;
 
-        foreach (var enemy in enemies)
+        foreach (var e in enemies)
         {
-            float dist = Vector2.Distance(transform.position, enemy.transform.position);
+            float dist = Vector2.Distance(transform.position, e.transform.position);
             if (dist < minDist)
             {
                 minDist = dist;
-                nearestEnemy = enemy.transform;
+                nearest = e.transform;
             }
         }
 
-        targetEnemy = nearestEnemy;
-    }
-
-    void FlipTowards(Vector2 targetPos)
-    {
-        if (targetPos.x > transform.position.x)
-        {
-            // Enemy bên phải => mặt player hướng phải
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-        else if (targetPos.x < transform.position.x)
-        {
-            // Enemy bên trái => mặt player hướng trái
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
+        targetEnemy = nearest;
     }
 
     void ShootAt(Vector2 targetPos)
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        if (bulletPrefab == null || tower == null) return;
 
-        Vector2 direction = (targetPos - (Vector2)firePoint.position).normalized;
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        Vector2 dir = (targetPos - (Vector2)firePoint.position).normalized;
 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.linearVelocity = direction * bulletSpeed;  // <-- sửa lại thành velocity
+        if (rb != null)
+            rb.linearVelocity = dir * bulletSpeed;
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Bullet bScript = bullet.GetComponent<Bullet>();
+        if (bScript != null)
+            bScript.damage = tower.bulletDamage;
+
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         bullet.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    public void ResetFireTimer()
+    {
+        fireTimer = fireCooldown;
     }
 }

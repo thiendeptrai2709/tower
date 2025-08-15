@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
@@ -6,14 +6,15 @@ public class PlayerClickManager : MonoBehaviour
 {
     public Camera mainCamera;
     public LayerMask positionSpotLayer;
+    public LayerMask playerLayer; // thêm layer cho player
 
     public PlayerSpawner playerSpawner;
+    public PlayerUpgradeUI upgradeUI; // tham chiếu UI nâng cấp
 
     private void Update()
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            // Tr�nh click v�o UI
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return;
 
@@ -21,10 +22,23 @@ public class PlayerClickManager : MonoBehaviour
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePos);
             Vector2 worldPos2D = new Vector2(worldPos.x, worldPos.y);
 
-            RaycastHit2D hit = Physics2D.Raycast(worldPos2D, Vector2.zero, 0f, positionSpotLayer);
-            if (hit.collider != null)
+            // Check click vào Player trước
+            RaycastHit2D hitPlayer = Physics2D.Raycast(worldPos2D, Vector2.zero, 0f, playerLayer);
+            if (hitPlayer.collider != null)
             {
-                PositionSpot spot = hit.collider.GetComponent<PositionSpot>();
+                PlayerUpgrade upgrade = hitPlayer.collider.GetComponent<PlayerUpgrade>();
+                if (upgrade != null)
+                {
+                    upgradeUI.Show(upgrade); // Mở panel nâng cấp
+                    return;
+                }
+            }
+
+            // Nếu không click player thì check PositionSpot
+            RaycastHit2D hitSpot = Physics2D.Raycast(worldPos2D, Vector2.zero, 0f, positionSpotLayer);
+            if (hitSpot.collider != null)
+            {
+                PositionSpot spot = hitSpot.collider.GetComponent<PositionSpot>();
                 if (spot != null)
                 {
                     spot.OnClicked();

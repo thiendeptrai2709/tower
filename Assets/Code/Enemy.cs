@@ -11,6 +11,13 @@ public class Enemy : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    // Hàm để tăng máu khi spawn
+    public void SetupHP(int bonusHP)
+    {
+        maxHealth += bonusHP;
+        currentHealth = maxHealth;
+    }
+
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -23,13 +30,9 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        // Cộng vàng cho người chơi
         GoldManager.Instance.AddGold(goldReward);
-
-        // Báo cho hệ thống spawn quái biết quái đã chết
+        Debug.Log("Enemy chết, báo WaveSpawner");
         WaveSpawner.EnemyKilled();
-
-        // Xóa enemy khỏi scene
         Destroy(gameObject);
     }
 }

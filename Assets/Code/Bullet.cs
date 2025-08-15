@@ -2,7 +2,12 @@
 
 public class Bullet : MonoBehaviour
 {
-    public int damage = 10; // Sát thương, chỉnh trong prefab
+    public int damage = 10;
+
+    void Start()
+    {
+        Destroy(gameObject, 1f);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -10,10 +15,9 @@ public class Bullet : MonoBehaviour
         {
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)
-            {
                 enemy.TakeDamage(damage);
-            }
-            Destroy(gameObject); // Hủy viên đạn
+
+            Destroy(gameObject);
         }
     }
 }

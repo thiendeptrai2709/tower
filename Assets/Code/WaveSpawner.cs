@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class WaveSpawner : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class WaveSpawner : MonoBehaviour
 
     public static WaveSpawner instance;
 
+    [Header("UI")]
+    public TMP_Text waveText;
+
     void Awake()
     {
         instance = this;
@@ -38,14 +42,16 @@ public class WaveSpawner : MonoBehaviour
             roundActive = true;
             enemiesKilledThisRound = 0;
             roundNumber++;
+
+            if (waveText != null)
+                waveText.text = $"Wave {roundNumber} / {totalRounds}";
+
             StartCoroutine(SpawnRound(roundNumber));
         }
     }
 
     IEnumerator SpawnRound(int round)
     {
-        Debug.Log("Bắt đầu Round " + round);
-
         List<Transform> possibleEnemies = new List<Transform>();
 
         if (round == 1)
@@ -75,23 +81,30 @@ public class WaveSpawner : MonoBehaviour
 
         int enemyCount = enemiesToKillPerRound;
 
+        // Tính bonus HP: cứ mỗi 5 round cộng thêm 50 HP
+        int bonusHP = (round - 1) / 5 * 50;
+
         for (int i = 0; i < enemyCount; i++)
         {
             Transform chosenEnemy = possibleEnemies[Random.Range(0, possibleEnemies.Count)];
-            Instantiate(chosenEnemy, spawnPoint.position, spawnPoint.rotation);
+            GameObject enemyObj = Instantiate(chosenEnemy, spawnPoint.position, spawnPoint.rotation).gameObject;
+
+            // Áp dụng bonus HP cho enemy
+            Enemy enemyScript = enemyObj.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.SetupHP(bonusHP);
+            }
+
             aliveEnemies++;
             yield return new WaitForSeconds(timeBetweenEnemies);
         }
 
-        // Sau khi spawn xong, chờ đủ số enemy bị tiêu diệt mới bắt đầu round mới
         while (enemiesKilledThisRound < enemiesToKillPerRound)
         {
             yield return null;
         }
 
-        Debug.Log("Kết thúc Round " + round);
-
-        // Chờ 5 giây trước khi round tiếp theo
         yield return new WaitForSeconds(timeBetweenRounds);
 
         roundActive = false;
@@ -107,7 +120,5 @@ public class WaveSpawner : MonoBehaviour
     {
         enemiesKilledThisRound++;
         aliveEnemies--;
-
-        Debug.Log($"Enemy bị tiêu diệt: {enemiesKilledThisRound}/{enemiesToKillPerRound}");
     }
 }
