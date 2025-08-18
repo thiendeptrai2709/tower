@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerUpgrade : MonoBehaviour
 {
@@ -76,4 +77,5 @@ public class PlayerUpgrade : MonoBehaviour
             playerAttack.ResetFireTimer();
         }
     }
+    
 }
