@@ -36,6 +36,22 @@ public class PlayerAttack : MonoBehaviour
             ShootAt(targetEnemy.position);
             fireTimer = fireCooldown; // dùng fireCooldown hiện tại
         }
+        //test
+        if (targetEnemy != null)
+        {
+            // Nếu enemy ở bên phải thì player quay phải
+            if (targetEnemy.position.x > transform.position.x)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+            // Nếu enemy ở bên trái thì player quay trái
+            else
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+        }
+
+
     }
 
     void FindNearestEnemy()

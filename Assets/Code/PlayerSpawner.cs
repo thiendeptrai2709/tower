@@ -37,7 +37,6 @@ public class PlayerSpawner : MonoBehaviour
         if (currentSpot == null)
             return;
 
-        // Kiểm tra vàng trước khi spawn
         int cost = playerCosts[index];
         if (!GoldManager.Instance.SpendGold(cost))
         {
@@ -46,8 +45,16 @@ public class PlayerSpawner : MonoBehaviour
             return;
         }
 
-        Instantiate(playerPrefabs[index], currentSpot.spawnPosition, Quaternion.identity);
+        // Snap vị trí theo grid
+        Vector3 pos = currentSpot.spawnPosition;
+        float gridSize = 1f; // chỉnh nếu tilemap không phải 1 unit / ô
+        pos.x = Mathf.Round(pos.x / gridSize) * gridSize;
+        pos.y = Mathf.Round(pos.y / gridSize) * gridSize;
+
+        Instantiate(playerPrefabs[index], pos, Quaternion.identity);
+
         currentSpot.hasPlayer = true;
         panel.SetActive(false);
     }
+
 }

@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 6170139bb959e8e408695ca6d14b4a4f
+AssetOrigin:
+  serializedVersion: 1
+  productId: 235559
+  packageName: Violet Themed UI
+  packageVersion: 1.2
+  assetPath: Assets/Violet Theme Ui/White Icons/White Pause.png
+  uploadId: 767621
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -119,9 +126,9 @@ TextureImporter:
       name: White Pause_0
       rect:
         serializedVersion: 2
-        x: 76
+        x: 0
         y: 0
-        width: 133
+        width: 512
         height: 512
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -137,33 +144,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: White Pause_1
-      rect:
-        serializedVersion: 2
-        x: 303
-        y: 0
-        width: 133
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c16f27d95d8e51c90800000000000000
-      internalID: -7199592425114634724
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 6894705bcab77724bafedcbee13bee6a
     internalID: 0
     vertices: []
     indices: 
@@ -171,19 +156,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":512.0,"y":512.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       White Pause_0: 2718379307920543195
-      White Pause_1: -7199592425114634724
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 235559
-  packageName: Violet Themed UI
-  packageVersion: 1.2
-  assetPath: Assets/Violet Theme Ui/White Icons/White Pause.png
-  uploadId: 767621

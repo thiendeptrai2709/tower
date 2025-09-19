@@ -6,6 +6,7 @@ public class EnemyMovement : MonoBehaviour
     private Transform target;
     private int waypointIndex = 0;
 
+    public int damageToBase = 1;
     void Start()
     {
         // Lấy waypoint đầu tiên
@@ -30,9 +31,19 @@ public class EnemyMovement : MonoBehaviour
         waypointIndex++;
         if (waypointIndex >= Waypoints.points.Length)
         {
-            Destroy(gameObject); // Tới đích thì xoá
+            ReachBase(); // Khi đến waypoint cuối cùng
             return;
         }
         target = Waypoints.points[waypointIndex];
+    }
+
+    void ReachBase()
+    {
+        BaseHealth baseHealth = FindFirstObjectByType<BaseHealth>();
+        if (baseHealth != null)
+        {
+            baseHealth.TakeDamage(damageToBase);
+        }
+        Destroy(gameObject); // Enemy biến mất sau khi tấn công base
     }
 }
