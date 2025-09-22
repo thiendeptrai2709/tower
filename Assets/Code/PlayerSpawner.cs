@@ -7,6 +7,7 @@ public class PlayerSpawner : MonoBehaviour
     public Button[] playerButtons; // 3 nút chọn player
     public GameObject[] playerPrefabs; // 3 prefab player
     public int[] playerCosts; // Giá vàng cho từng player
+    public Button togglePanelButton; // Nút bật/tắt panel
 
     private PositionSpot currentSpot;
 
@@ -14,10 +15,17 @@ public class PlayerSpawner : MonoBehaviour
     {
         panel.SetActive(false);
 
+        // Gán sự kiện cho các nút chọn player
         for (int i = 0; i < playerButtons.Length; i++)
         {
             int index = i;
             playerButtons[i].onClick.AddListener(() => OnPlayerSelected(index));
+        }
+
+        // Gán sự kiện cho nút bật/tắt panel
+        if (togglePanelButton != null)
+        {
+            togglePanelButton.onClick.AddListener(TogglePanel);
         }
     }
 
@@ -57,4 +65,8 @@ public class PlayerSpawner : MonoBehaviour
         panel.SetActive(false);
     }
 
+    private void TogglePanel()
+    {
+        panel.SetActive(!panel.activeSelf);
+    }
 }

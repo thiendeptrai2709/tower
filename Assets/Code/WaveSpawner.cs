@@ -29,6 +29,7 @@ public class WaveSpawner : MonoBehaviour
 
     [Header("UI")]
     public TMP_Text waveText;
+    public GameObject winPanel;
 
     void Awake()
     {
@@ -47,6 +48,10 @@ public class WaveSpawner : MonoBehaviour
                 waveText.text = $"Wave {roundNumber} / {totalRounds}";
 
             StartCoroutine(SpawnRound(roundNumber));
+        }
+        if (roundNumber >= totalRounds && aliveEnemies <= 0 && !roundActive)
+        {
+            WinGame();
         }
     }
 
@@ -121,4 +126,31 @@ public class WaveSpawner : MonoBehaviour
         enemiesKilledThisRound++;
         aliveEnemies--;
     }
+    private void WinGame()
+    {
+        Debug.Log("YOU WIN!");
+        if (winPanel != null)
+            winPanel.SetActive(true);
+
+        Time.timeScale = 0f; // Dừng game khi thắng
+
+        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (currentScene.StartsWith("Level"))
+        {
+            int currentLevel = int.Parse(currentScene.Replace("Level", ""));
+            LevelManager.UnlockNextLevel(currentLevel);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
