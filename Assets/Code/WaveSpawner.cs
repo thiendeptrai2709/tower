@@ -132,7 +132,7 @@ public class WaveSpawner : MonoBehaviour
         if (winPanel != null)
             winPanel.SetActive(true);
 
-        Time.timeScale = 0f; // Dừng game khi thắng
+        Time.timeScale = 0f;
 
         string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         if (currentScene.StartsWith("Level"))
@@ -141,6 +141,7 @@ public class WaveSpawner : MonoBehaviour
             LevelManager.UnlockNextLevel(currentLevel);
         }
     }
+
 }
 
 
